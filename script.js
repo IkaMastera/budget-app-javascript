@@ -27,3 +27,11 @@ totalAmountButton.addEventListener("click", () => {
     totalAmount.value = "";
   }
 });
+
+//Function to disable edit and delete buttons
+const disableButtons = (bool) => {
+  let editButtons = document.getElementsByClassName("edit");
+  Array.from(editButtons).forEach((element) => {
+    element.disabled = bool;
+  });
+};
