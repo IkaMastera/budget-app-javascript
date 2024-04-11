@@ -41,9 +41,9 @@ const modifyElement = (element, edit = false) => {
   let parentDiv = element.parentElement;
   let currentBalance = balanceValue.innerText;
   let currentExpense = expenditureValue.innerText;
-  let parentAmount = parentDiv.querySelector("amount").innerText;
+  let parentAmount = parentDiv.querySelector(".amount").innerText;
   if (edit) {
-    let parentText = parentDiv.querySelector("product").innerText;
+    let parentText = parentDiv.querySelector(".product").innerText;
     productTitle.value = parentText;
     userAmount.value = parentAmount;
     disableButtons(true);
@@ -59,7 +59,7 @@ const listCreator = (expenseName, expenseValue) => {
   let sublistContent = document.createElement("div");
   sublistContent.classList.add("sublist-content", "flex-space");
   list.appendChild(sublistContent);
-  sublistContent.innerHTML = `<p class="product">${expenseName}</p><p>${expenseValue}</p>`;
+  sublistContent.innerHTML = `<p class="product">${expenseName}</p><p class="amount">${expenseValue}</p>`;
   let editButton = document.createElement("button");
   editButton.classList.add("fa-solid", "fa-pen-to-square", "edit");
   editButton.style.fontSize = "24px";
@@ -67,12 +67,34 @@ const listCreator = (expenseName, expenseValue) => {
     modifyElement(editButton, true);
   });
   let deleteButton = document.createElement("button");
-  deleteButton.classList.add("fa-solid", "fa-trash-can-xmark", "delete");
+  deleteButton.classList.add("fa-solid", "fa-trash-can", "delete");
   deleteButton.style.fontSize = "24px";
   deleteButton.addEventListener("click", () => {
     modifyElement(deleteButton);
   });
   sublistContent.appendChild(editButton);
-  sublistContent.appendChild(delete);
+  sublistContent.appendChild(deleteButton);
   document.getElementById("list").appendChild(sublistContent);
 };
+
+//Function to add expenses
+checkAmountButton.addEventListener("click", () => {
+  if (!userAmount.value || !productTitle.value) {
+    productTitleError.classList.remove("hide");
+    return false;
+  }
+  //Enable buttons
+  disableButtons(false);
+  //Expense
+  let expenditure = parseInt(userAmount.value);
+  //Total expense (existing + new)
+  let sum = parseInt(expenditureValue.innerText) + expenditure;
+  expenditureValue.innerText = sum;
+  //Total balance(budet - total expense)
+  const totalBalance = tempAmount - sum;
+  balanceValue.innerText = totalBalance;
+  //Create list
+  listCreator(productTitle.value, userAmount.value);
+  productTitle.value = "";
+  userAmount.value = "";
+});
